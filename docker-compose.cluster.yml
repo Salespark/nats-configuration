@@ -1,0 +1,40 @@
+services:
+  nats:
+    image: nats
+    container_name: bridge-cluster
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4222:4222"
+    command: "-c /var/seed.conf"
+    networks: ["nats"]
+    logging:
+      options:
+        max-size: 1g
+    healthcheck:
+      test: [ "CMD", "nats", "--version" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./seed.conf:/var/seed.conf
+  node-1:
+    image: nats
+    container_name: node-1
+    restart: unless-stopped
+    command: "-c /var/node.conf"
+    networks: ["nats"]
+    depends_on: ["nats"]
+    volumes:
+      - ./node.conf:/var/node.conf
+  node-2:
+    image: nats
+    container_name: node-2
+    restart: unless-stopped
+    command: "-c /var/node.conf"
+    networks: [ "nats" ]
+    depends_on: [ "nats" ]
+    volumes:
+      - ./node.conf:/var/node.conf
+networks:
+  nats:
+    name: nats
