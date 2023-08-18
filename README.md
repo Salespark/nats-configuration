@@ -1,2 +1,2 @@
-# nats-configuration
-That repo contain the Nats configuration and Docker File
+# Nats Configuration Examples
+That repo contains the Nats configuration and Docker File
